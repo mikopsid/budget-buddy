@@ -7,7 +7,7 @@ ctk.set_default_color_theme("dark-blue")
 
 app = ctk.CTk()
 app.title("Budget Buddy")
-app.geometry("500x600")
+app.geometry("600x500")
 
 frame = ctk.CTkFrame(master=app)
 frame.pack(pady=40, padx=60, fill="both", expand=True)
