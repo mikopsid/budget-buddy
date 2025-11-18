@@ -130,7 +130,8 @@ def proceed():
     theme_menu.pack()
 
     global income_entry
-    income_label = ctk.CTkLabel(master=frame, text="Enter your monthly income: (numbers only)")
+    user_name = name_entry.get()
+    income_label = ctk.CTkLabel(master=frame, text=f"Hi {user_name}, please enter monthly income:")
     income_label.pack(pady=(10, 0))
     income_entry = ctk.CTkEntry(master=frame)
     income_entry.pack()
