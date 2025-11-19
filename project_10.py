@@ -83,6 +83,8 @@ def submit_all():
         grocery.write_to_file()
         car.write_to_file()
 
+        # Write to data.txt
+
         with open("data.txt", "w") as f:
             f.write("Grocery Expenses:\n")
             for name, cost in grocery.get_expenses_list().items():
@@ -91,6 +93,10 @@ def submit_all():
             f.write("\nCar Expenses:\n")
             for name, cost in car.get_expenses_list().items():
                 f.write(f"{name} : ${float(cost):.2f}\n")
+
+
+        # Read from data.txt
+
         with open("data.txt", "r") as f:
             data_contents = f.read()
 
