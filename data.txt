@@ -1,0 +1,7 @@
+Grocery Expenses:
+milk : $50.00
+eggs : $100.00
+
+Car Expenses:
+gas : $50.00
+tires : $300.00
