@@ -97,7 +97,7 @@ def submit_all():
 
         # Read from data.txt
 
-        with open("data.txt", "r") as f:
+        with open("data.txt", "a") as f:
             data_contents = f.read()
 
         data_label = ctk.CTkLabel(master=frame, text=data_contents, justify="left")
