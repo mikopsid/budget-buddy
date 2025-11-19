@@ -58,6 +58,7 @@ def submit_all():
                 car.add_expense(name_item, cost)
             else:
                 raise ValueError
+        
 
         total = grocery.get_expenses() + car.get_expenses()
         balance = functions.calc_balance(income, total)
@@ -78,17 +79,23 @@ def submit_all():
         expense_title = ctk.CTkLabel(master=frame, text="Individual Expenses:")
         expense_title.pack()
 
-        # Display grocery expenses
-        for name, amount in grocery.get_expenses_list().items():
-            ctk.CTkLabel(master=frame, text=f"Grocery - {name}: ${amount:.2f}").pack()
-
-        # Display car expenses
-        for name, amount in car.get_expenses_list().items():
-            ctk.CTkLabel(master=frame, text=f"Car - {name}: ${amount:.2f}").pack()
-
-
+        
         grocery.write_to_file()
         car.write_to_file()
+
+        with open("data.txt", "w") as f:
+            f.write("Grocery Expenses:\n")
+            for name, cost in grocery.get_expenses_list().items():
+                f.write(f"{name} : ${float(cost):.2f}\n")
+
+            f.write("\nCar Expenses:\n")
+            for name, cost in car.get_expenses_list().items():
+                f.write(f"{name} : ${float(cost):.2f}\n")
+        with open("data.txt", "r") as f:
+            data_contents = f.read()
+
+        data_label = ctk.CTkLabel(master=frame, text=data_contents, justify="left")
+        data_label.pack(pady=(10, 0))
 
     except ValueError:
         error_label.configure(text="Please follow 'name cost' format")
