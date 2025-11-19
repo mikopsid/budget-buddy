@@ -20,7 +20,6 @@ def change_theme(choice):
     ctk.set_appearance_mode(choice)
 
 theme_menu = ctk.CTkOptionMenu(master=frame, values=["Light", "Dark"], command=change_theme)
-
 theme_menu.pack()
 
 # ---------- NAME ENTRY ----------
@@ -58,7 +57,6 @@ def submit_all():
                 car.add_expense(name_item, cost)
             else:
                 raise ValueError
-        
 
         total = grocery.get_expenses() + car.get_expenses()
         balance = functions.calc_balance(income, total)
@@ -74,34 +72,31 @@ def submit_all():
         result_label.configure(text=result_text, text_color="red" if balance < 0 else "green")
         result_label.pack(pady=20)
 
-                
-        # Add label for individual expenses
+        # ---- Prepare current session's expense details ----
+        expense_text = "\nGrocery Expenses:\n"
+        for name, cost in grocery.get_expenses_list().items():
+            expense_text += f"{name} : ${float(cost):.2f}\n"
+
+        expense_text += "\nCar Expenses:\n"
+        for name, cost in car.get_expenses_list().items():
+            expense_text += f"{name} : ${float(cost):.2f}\n"
+
+        #expense_text += "\n----------------------\n"
+
+        # --- Append to file ---
+        with open("data.txt", "a") as f:
+            f.write(expense_text)
+
+        # --- Show only current session expenses ---
         expense_title = ctk.CTkLabel(master=frame, text="Individual Expenses:")
         expense_title.pack()
 
-        
-        grocery.write_to_file()
-        car.write_to_file()
-
-        # Write to data.txt
-
-        with open("data.txt", "w") as f:
-            f.write("Grocery Expenses:\n")
-            for name, cost in grocery.get_expenses_list().items():
-                f.write(f"{name} : ${float(cost):.2f}\n")
-
-            f.write("\nCar Expenses:\n")
-            for name, cost in car.get_expenses_list().items():
-                f.write(f"{name} : ${float(cost):.2f}\n")
-
-
-        # Read from data.txt
-
-        with open("data.txt", "a") as f:
-            data_contents = f.read()
-
-        data_label = ctk.CTkLabel(master=frame, text=data_contents, justify="left")
+        data_label = ctk.CTkLabel(master=frame, text=expense_text, justify="left", anchor="w")
         data_label.pack(pady=(10, 0))
+
+
+        view_all_button = ctk.CTkButton(master=frame, text="View All Past Expenses", command=show_all_expenses)
+        view_all_button.pack(pady=(10, 0))
 
     except ValueError:
         error_label.configure(text="Please follow 'name cost' format")
@@ -143,7 +138,6 @@ def proceed():
     theme_menu.pack()
 
     global income_entry
-    user_name = name_entry.get()
     income_label = ctk.CTkLabel(master=frame, text=f"Hi {user_name}, please enter monthly income:")
     income_label.pack(pady=(10, 0))
     income_entry = ctk.CTkEntry(master=frame)
@@ -154,7 +148,38 @@ def proceed():
 
     error_label.pack()
 
+def show_all_expenses():
+    try:
+        with open("data.txt", "r") as f:
+            all_data = f.read()
+
+        # Remove previous widgets in frame
+        for widget in frame.winfo_children():
+            widget.pack_forget()
+
+        theme_label.pack(pady=(10, 0))
+        theme_menu.pack()
+
+        title = ctk.CTkLabel(master=frame, text="All Past Expenses:")
+        title.pack(pady=(10, 5))
+
+        all_data_label = ctk.CTkLabel(master=frame, text=all_data, justify="left", wraplength=500)
+        all_data_label.pack(pady=(0, 10))
+
+        back_button = ctk.CTkButton(master=frame, text="Back", command=proceed)
+        back_button.pack(pady=(10, 0))
+
+    except FileNotFoundError:
+        error_label.configure(text="No past expense data found.")
+
+
+
+
+
+
+
 submit_button = ctk.CTkButton(master=frame, text="Continue", command=proceed)
 submit_button.pack()
+
 
 app.mainloop()
